@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Firmab</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<style type="text/css">
+body
+{
+  padding:0;
+}
+#paintBox
+{
+  border:1px solid #9a9a9a;
+  width:"380dip";
+  height:"250dip";
+  background-color:"white";
+}
+</style>
+<script type="text/javascript">
+  var canvas = null; //canvas object
+  var context = null; //canvas's context object
+  var clearBtn = null; //clear button object
+
+  /*boolean var to check if the touchstart event
+  is caused and then record the initial co-ordinate*/
+  var buttonDown = false;
+
+  //onLoad event register
+  window.addEventListener('load', initApp, false);
+
+  function initApp() {
+    setTimeout(function() { window.scrollTo(0, 1); }, 10); //hide the address bar of the browser.
+    canvas = document.getElementById('paintBox');
+    clearBtn = document.getElementById('clearBtn');
+
+    setCanvasDmiension();
+    initializeEvents();
+
+    context = canvas.getContext('2d'); //get the 2D drawing context of the canvas
+}
+
+function setCanvasDmiension() {
+  //canvas.width = 300; //window.innerWidth;
+  // canvas.height = window.innerHeight; //setting the height of the canvas
+  canvas.height=230;
+  canvas.width=320;
+}
+
+function initializeEvents() {
+  canvas.addEventListener('touchstart', startPaint, false);
+  canvas.addEventListener('touchmove', continuePaint, false);
+  canvas.addEventListener('touchend', stopPaint, false);
+
+  clearBtn.addEventListener('touchend', clearCanvas,false);
+}
+
+function clearCanvas() {
+  context.clearRect(0,0,canvas.width,canvas.height);
+}
+
+function startPaint(evt) {
+  if(!buttonDown)
+  {
+    context.beginPath();
+    context.moveTo(evt.touches[0].pageX-canvas.offsetLeft, evt.touches[0].pageY-canvas.offsetTop);
+    buttonDown = true;
+  }
+  evt.preventDefault();
+}
+
+function continuePaint(evt) {
+  if(buttonDown)
+  {
+    context.lineTo(evt.touches[0].pageX-canvas.offsetLeft,evt.touches[0].pageY-canvas.offsetTop);
+    context.stroke();
+  }
+}
+
+function stopPaint() {
+  buttonDown = false;
+}
+</script>
+</head>
+<body>
+  <input type="button" value="Clean" id="clearBtn"/>
+  <canvas id="paintBox">
+    
+  </canvas>
+</body>
+</html>
